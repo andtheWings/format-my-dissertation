@@ -25,11 +25,11 @@ One round = one testable feature delivered end-to-end.
 | 3 | 16 | Fix: DOCX extraction | ✅ | — | — | — | Added `office` feature to kreuzberg in Cargo.toml |
 | 3 | 17 | Fix: institutions path resolution | ✅ | — | — | — | Default path now resolves relative to CARGO_MANIFEST_DIR |
 | 3 | 18 | Switch from npm to bun | ✅ | — | — | — | Faster installs; Dockerfile uses oven/bun for deps/builder |
-| 4 | 19 | Copy full IU spec from diss-check | ⬜ | [spec](../superpowers/specs/2026-07-02-phase-4-design.md) | [plan](../superpowers/plans/2026-07-02-phase-4-llm-tools.md) | — | 327-line, 33 checks |
-| 4 | 20 | Complete IU Typst template (14 sections + styles) | ⬜ | same | same | — | Required + optional sections, passes automated checks by construction |
-| 4 | 21 | GET /institutions/:id/spec endpoint | ⬜ | same | same | — | Returns raw spec + parsed summary (structure, constants, check counts) |
-| 4 | 22 | GET /institutions/:id/template endpoint | ⬜ | same | same | — | Returns all .typ files recursively with contents |
-| 4 | 23 | get_institution_spec + get_template AI SDK tools | ⬜ | same | same | — | LLM can read spec and template on-demand during formatting |
-| 4 | 24 | Dynamic system prompt | ⬜ | same | same | — | Injects institution name, structure, constants, and template file index |
+| 4 | 19 | Copy full IU spec from diss-check | ✅ | [spec](../superpowers/specs/2026-07-02-phase-4-design.md) | [plan](../superpowers/plans/2026-07-02-phase-4-llm-tools.md) | — | 327-line, 33 checks |
+| 4 | 20 | Complete IU Typst template (14 sections + styles) | ✅ | same | same | — | Required + optional sections, passes automated checks by construction |
+| 4 | 21 | GET /institutions/:id/spec endpoint | ✅ | same | same | — | Returns raw spec + parsed summary (structure, constants, check counts) |
+| 4 | 22 | GET /institutions/:id/template endpoint | ✅ | same | same | — | Returns all .typ files recursively with contents |
+| 4 | 23 | get_institution_spec + get_template AI SDK tools | ✅ | same | same | — | LLM can read spec and template on-demand during formatting |
+| 4 | 24 | Dynamic system prompt | ✅ | same | same | — | Injects institution name, structure, constants, and template file index |
 
 (End of file — total 31 lines)
