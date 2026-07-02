@@ -4,6 +4,7 @@ mod error;
 pub mod extract;
 pub mod institutions;
 pub mod routes;
+pub mod validate;
 
 use std::net::SocketAddr;
 use tower_http::cors::CorsLayer;
