@@ -80,3 +80,51 @@ export async function validatePdf(
   }
   return res.json();
 }
+
+export interface SpecSummary {
+  institution: string;
+  document_structure: unknown;
+  constants: unknown;
+  check_count: { automated: number; human: number };
+}
+
+export interface SpecResponse {
+  raw: unknown;
+  summary: SpecSummary;
+}
+
+export async function fetchInstitutionSpec(
+  institutionId: string
+): Promise<SpecResponse> {
+  const res = await fetch(
+    `${RUST_SERVICE_URL}/institutions/${encodeURIComponent(institutionId)}/spec`
+  );
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: res.statusText }));
+    throw new Error(err.error ?? `Spec fetch failed: ${res.status}`);
+  }
+  return res.json();
+}
+
+export interface TemplateFile {
+  path: string;
+  content: string;
+}
+
+export interface TemplateResponse {
+  files: TemplateFile[];
+  entry: string;
+}
+
+export async function fetchTemplate(
+  institutionId: string
+): Promise<TemplateResponse> {
+  const res = await fetch(
+    `${RUST_SERVICE_URL}/institutions/${encodeURIComponent(institutionId)}/template`
+  );
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: res.statusText }));
+    throw new Error(err.error ?? `Template fetch failed: ${res.status}`);
+  }
+  return res.json();
+}
