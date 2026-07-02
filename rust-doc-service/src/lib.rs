@@ -6,8 +6,23 @@ pub mod institutions;
 pub mod routes;
 pub mod validate;
 
+use axum::{
+    body::Body,
+    http::Request,
+    middleware::{self, Next},
+    response::IntoResponse,
+};
 use std::net::SocketAddr;
 use tower_http::cors::CorsLayer;
+
+async fn request_id_middleware(req: Request<Body>, next: Next) -> impl IntoResponse {
+    let request_id = uuid::Uuid::new_v4().to_string();
+    let mut response = next.run(req).await;
+    response
+        .headers_mut()
+        .insert("x-request-id", request_id.parse().unwrap());
+    response
+}
 
 pub async fn run() {
     tracing_subscriber::fmt()
@@ -24,6 +39,7 @@ pub async fn run() {
 
     let app = routes::router()
         .with_state(institutions)
+        .layer(middleware::from_fn(request_id_middleware))
         .layer(CorsLayer::permissive());
 
     let addr = SocketAddr::from(([0, 0, 0, 0], app_config.port));
