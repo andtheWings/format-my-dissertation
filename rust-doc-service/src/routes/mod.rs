@@ -1,5 +1,6 @@
 mod compile;
 mod extract;
+mod institutions;
 mod validate;
 
 use crate::institutions::Registry;
@@ -14,4 +15,5 @@ pub fn router() -> Router<Registry> {
         .route("/compile", post(compile::handler))
         .route("/validate", post(validate::handler))
         .route("/health", get(|| async { "ok" }))
+        .route("/institutions", get(institutions::handler))
 }

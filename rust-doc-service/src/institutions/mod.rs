@@ -77,7 +77,6 @@ impl Registry {
         self.institutions.get(id)
     }
 
-    #[allow(dead_code)]
     pub fn list(&self) -> Vec<&Institution> {
         self.institutions.values().collect()
     }
