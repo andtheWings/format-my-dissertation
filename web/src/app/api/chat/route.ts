@@ -6,13 +6,17 @@ import {
   toUIMessageStream,
 } from "ai";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
-import { extractTool, compileTool, validateTool } from "@/lib/tools";
+import { createTools } from "@/lib/tools";
 
 const DEFAULT_BASE_URL = "https://reallms.rescloud.iu.edu/direct/v1";
 const DEFAULT_MODEL = "gemma-4-31B-it";
 
 export async function POST(req: Request) {
-  const { messages, institutionId }: { messages: UIMessage[]; institutionId: string } =
+  const {
+    messages,
+    institutionId,
+    sessionId,
+  }: { messages: UIMessage[]; institutionId: string; sessionId: string } =
     await req.json();
 
   const baseURL = process.env.LLM_BASE_URL ?? DEFAULT_BASE_URL;
@@ -27,6 +31,7 @@ export async function POST(req: Request) {
 
   const systemPrompt = `You are a dissertation formatting assistant.
 The selected institution ID is: ${institutionId}.
+The current session ID is: ${sessionId}.
 
 You have access to tools for extracting documents, compiling Typst code, and validating PDFs.
 Use them to help the student format their dissertation.
@@ -44,11 +49,7 @@ WORKFLOW:
     model: provider(model),
     messages: await convertToModelMessages(messages),
     system: systemPrompt,
-    tools: {
-      extract_document: extractTool,
-      compile_typst: compileTool,
-      validate_pdf: validateTool,
-    },
+    tools: createTools(sessionId),
   });
 
   return createUIMessageStreamResponse({
