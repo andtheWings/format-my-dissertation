@@ -19,6 +19,7 @@ export interface ExtractResult {
     raw_text: string;
   };
   structure: {
+    headings: Array<{ text: string; level: number; page_number: number | null }>;
     front_matter: Array<{ id: string; title: string | null; page_start: number }>;
     body: Array<{ id: string; title: string | null; page_start: number }>;
     end_matter: Array<{ id: string; title: string | null; page_start: number }>;
@@ -27,6 +28,7 @@ export interface ExtractResult {
     title: string | null;
     author: string | null;
     page_count: number;
+    page_count_estimated: boolean;
     detected_fonts: string[];
   };
 }
@@ -84,12 +86,13 @@ export async function validatePdf(
   pdfBytes: ArrayBuffer,
   institutionId: string
 ): Promise<ValidationResult> {
+  const base64 = Buffer.from(pdfBytes).toString("base64");
   const res = await fetch(`${RUST_SERVICE_URL}/validate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      pdf_bytes: Array.from(new Uint8Array(pdfBytes)),
-      institution_id: institutionId,
+      pdf_base64: base64,
+      institution: institutionId,
     }),
   });
   if (!res.ok) {

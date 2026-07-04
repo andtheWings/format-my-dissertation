@@ -46,7 +46,10 @@ function messagesHaveNewToolOutput(
   const result = { compile: false, validate: false };
   for (let i = prevLen; i < messages.length; i++) {
     for (const part of messages[i].parts) {
-      if (part.type === "tool-compile_typst" && "state" in part) {
+      if (
+        part.type === "tool-compile_typst" ||
+        part.type === "tool-build_document"
+      ) {
         if (part.state === "output-available") result.compile = true;
       }
       if (part.type === "tool-validate_pdf" && "state" in part) {

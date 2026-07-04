@@ -1,10 +1,11 @@
 use crate::{error::AppError, institutions::Registry, validate};
 use axum::{extract::State, Json};
+use base64::{engine::general_purpose::STANDARD, Engine};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct ValidateRequest {
-    pdf_bytes: Vec<u8>,
+    pdf_base64: String,
     institution: String,
 }
 
@@ -16,6 +17,10 @@ pub async fn handler(
         .get(&req.institution)
         .ok_or_else(|| AppError::InstitutionNotFound(req.institution.clone()))?;
 
-    let result = validate::validate(&req.pdf_bytes, &institution.spec).await?;
+    let pdf_bytes = STANDARD
+        .decode(&req.pdf_base64)
+        .map_err(|e| AppError::Compilation(format!("Invalid base64: {}", e)))?;
+
+    let result = validate::validate(&pdf_bytes, &institution.spec).await?;
     Ok(Json(result))
 }

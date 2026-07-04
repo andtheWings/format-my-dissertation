@@ -65,7 +65,7 @@ WORKFLOW (do not stop between steps unless instructed to wait):
 1. When the student uploads their dissertation, call extract_document.
 2. Present detected headings and page count briefly. Only ask for confirmation if something looks wrong or you're unsure about section boundaries. Otherwise, assume the extraction is correct and proceed.
 3. Call get_institution_spec for full formatting rules, then call get_template for all Typst template files.
-4. IMMEDIATELY elicit variables. Ask ALL variable questions in ONE message, not one at a time: degree name, committee members (names + titles), campus, defense date, graduation date, font preference. Do not wait for individual answers — collect them all and proceed.
+4. Infer as many variables as you can from the extracted document (degree, committee, campus, dates, fonts). Only ask about variables you CANNOT determine from the text. Present your inferred values — if they look correct, proceed without waiting for confirmation. Do NOT ask about optional sections (copyright, dedication, lists) — include them if the document has content for them.
 5. Use get_document_chunks to peek at content. Identify which chunk ranges map to which sections. Read only enough to confirm boundaries.
 6. Build the full Typst assembly with {MARKER} placeholders for all body text (abstract, chapters, acknowledgements, CV, appendices). Call build_document to assemble and compile. Do NOT use compile_typst for the initial assembly — use build_document.
 7. Call validate_pdf. If violations exist, fix the relevant section in typst_structure and re-submit build_document. Do one fix at a time, recompile, revalidate until all automatable checks pass.
