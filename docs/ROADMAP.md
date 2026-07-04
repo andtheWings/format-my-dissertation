@@ -36,6 +36,7 @@ One round = one testable feature delivered end-to-end.
 | 7 | 27 | Fix: extraction store resilience | ✅ | — | — | — | File-based fallback survives HMR resets; PUT response checked; sessionId added to useCallback deps |
 | 7 | 28 | Fix: system prompt workflow directive | ✅ | — | — | — | Explicit continuations after tool calls; spec tool returns full checks not just summary |
 | 7 | 29 | Fix: tool loop + compile import resolution | ✅ | — | — | — | streamText isStepCount(1→10) so LLM sees tool results; compile --root for Typst imports |
+| 7 | 30 | feat: build_document tool | ✅ | [spec](../superpowers/specs/2026-07-03-build-document-tool-design.md) | [plan](../superpowers/plans/2026-07-03-build-document-tool.md) | — | LLM generates structure with {MARKER} placeholders; backend fetches chunks, escapes, compiles |
 | 8 | — | Chat flow end-to-end testing | ⬜ | — | — | — | Provision REALLMS key; full upload→extract→confirm→spec→template→chunks→compile→validate→iterate |
 
 (End of file — total 31 lines)
