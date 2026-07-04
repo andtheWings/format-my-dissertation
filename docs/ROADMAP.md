@@ -1,6 +1,6 @@
 # Roadmap — format-my-dissertation
 
-**Updated:** 2026-07-03 (Phase 7 — extraction store resilience)
+**Updated:** 2026-07-03 (Phase 7 — build_document tool)
 
 One round = one testable feature delivered end-to-end.
 
