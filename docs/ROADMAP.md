@@ -1,6 +1,6 @@
 # Roadmap — format-my-dissertation
 
-**Updated:** 2026-07-04 (Phase 8 — stabilization + chunking improvements)
+**Updated:** 2026-07-08 (Phase 9 — Typst template refinement)
 
 One round = one testable feature delivered end-to-end.
 
@@ -38,4 +38,11 @@ One round = one testable feature delivered end-to-end.
 | 7 | 29 | Fix: tool loop + compile import resolution | ✅ | — | — | — | streamText isStepCount(1→10) so LLM sees tool results; compile --root for Typst imports |
 | 7 | 30 | feat: build_document tool | ✅ | [spec](../superpowers/specs/2026-07-03-build-document-tool-design.md) | [plan](../superpowers/plans/2026-07-03-build-document-tool.md) | — | LLM generates structure with {MARKER} placeholders; backend fetches chunks, escapes, compiles |
 | 8 | 31 | fix: chunk dedup + heading lookup + dark mode + validate body limit | ✅ | — | — | — | Overlap ranges merged in getChunksFromText; heading-based arg in get_document_chunks; ThemeProvider/Toggle with dark default; axum DefaultBodyLimit::max(50MB) on /validate |
-| 8 | — | Chat flow end-to-end testing | ⬜ | — | — | — | Provision REALLMS key; full upload→extract→confirm→spec→template→chunks→compile→validate→iterate |
+| 9 | 32 | fix: page numbering (hardcoded iii/iv, body arabic) | ✅ | — | — | — | Removed `set page(numbering: "iii")` from abstract.typ and `"iv"` from toc.typ; added `set page(numbering: "1")` to chapters.typ; page_numbers_format passes |
+| 9 | 33 | feat: test template with placeholder content | ✅ | — | — | — | `institutions/iu/tests/template-test.typ` calls all 16 section functions with realistic placeholder text; 24 PASS / 5 FAIL / 4 ERROR baseline established |
+| 9 | 34 | fix: abstract section detection | ✅ | — | — | — | Two causes: missing pagebreak() (merged with preface) + only 97 spans (<100 heuristic). Added pagebreak(); rewritten with proper top-down layout (heading, author, title, body, committee); now 164 spans, all 3 abstract checkers PASS |
+| 9 | 35 | fix: committee chair detection | ⬜ | — | — | — | Acceptance page renders committee but checker can't extract members; investigate diss-check committee detection patterns; fix template rendering |
+| 9 | 36 | fix: title clause wording | ✅ | — | — | — | Forced line breaks (`\`) in clause so Typst renders 7 distinct lines instead of 1 wrapped paragraph; checker's fuzzy 70% threshold matches all 7 lines |
+| 9 | 37 | investigate: ScholarWorks margin calibration | ⬜ | — | — | — | Download 2-3 real IU dissertation PDFs; compare margin measurements against template; determine whether global_margins + margin_symmetry failures are placeholder artifacts or real template bugs |
+| 9 | 38 | fix: references_heading_format false positive | ⬜ | — | — | — | Font subset ID prefix (NCFKRX+) differs on references page vs chapters despite same font; may need checker exception or template rendering adjustment |
+| 9 | 39 | end-to-end template validation | ⬜ | — | — | — | Apply all fixes; compile test template; run full diss-check; verify all automatable checks pass; document any remaining failures as known limitations |
