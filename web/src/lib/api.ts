@@ -76,7 +76,7 @@ export interface Violation {
 }
 
 export interface ValidationResult {
-  results: Violation[];
+  violations: Violation[];
   pass_count: number;
   fail_count: number;
   error_count: number;
@@ -87,6 +87,7 @@ export async function validatePdf(
   institutionId: string
 ): Promise<ValidationResult> {
   const base64 = Buffer.from(pdfBytes).toString("base64");
+  console.error("[validatePdf] sending request", { pdfBytesLen: pdfBytes.byteLength, base64Len: base64.length });
   const res = await fetch(`${RUST_SERVICE_URL}/validate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -96,8 +97,14 @@ export async function validatePdf(
     }),
   });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: res.statusText }));
-    throw new Error(err.error ?? `Validate failed: ${res.status}`);
+    const body = await res.text().catch(() => "");
+    console.error("[validatePdf] failed", { status: res.status, body: body.slice(0, 500) });
+    let errMsg = `Validate failed: ${res.status}`;
+    try {
+      const json = JSON.parse(body);
+      errMsg = json.error ?? errMsg;
+    } catch {}
+    throw new Error(errMsg);
   }
   return res.json();
 }

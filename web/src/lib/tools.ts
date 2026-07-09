@@ -177,19 +177,24 @@ export function createTools(sessionId: string) {
             "No PDF available to validate. Ask the student to compile the document first.",
         };
       }
-      const result = await validatePdf(pdfBytes.buffer as ArrayBuffer, institutionId);
-      const violations = result.results.filter((r) => r.status !== "pass");
-      storeViolations(
-        sessionId,
-        violations,
-        result.pass_count,
-        result.fail_count
-      );
-      return {
-        passCount: result.pass_count,
-        failCount: result.fail_count,
-        violations,
-      };
+      try {
+        const result = await validatePdf(pdfBytes.buffer as ArrayBuffer, institutionId);
+        const violations = result.violations.filter((r) => r.status !== "PASS");
+        storeViolations(
+          sessionId,
+          violations,
+          result.pass_count,
+          result.fail_count
+        );
+        return {
+          passCount: result.pass_count,
+          failCount: result.fail_count,
+          violations,
+        };
+      } catch (e) {
+        console.error("[validatePdfTool] execution failed", e);
+        throw e;
+      }
     },
   });
 
