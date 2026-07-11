@@ -60,12 +60,22 @@ Two-tier model for consuming catalog:
 - **Embedded:** YAML spec files, Typst template files (~KB). Small, needed at runtime.
 - **External:** Corpus PDFs (~MB). Large, only needed in CI/development. Never embedded.
 
+**Versioning:** catalog follows Semantic Versioning. Patch/Minor = data updates
+(changing a margin requirement). Major = breaking schema change in YAML structure.
+
 **Library stays path-based:** `scholarpress-check` accepts `&Path` to a spec file.
 Embedding is a concern of the binary (`scholarpress-cli`), not the library. The
 library remains agnostic about how its data is sourced.
 
-**Versioning:** catalog follows Semantic Versioning. Patch/Minor = data updates
-(changing a margin requirement). Major = breaking schema change in YAML structure.
+**CI adaptation:** Since Git submodules are dropped in favor of `CATALOG_PATH`,
+CI workflows for `scholarpress-check` and `scholarpress-cli` must include an
+explicit step to clone `scholarpress-catalog` into the sibling directory before
+running `cargo test` or `cargo build`. Example:
+
+```yaml
+- name: Clone catalog
+  run: git clone https://github.com/.../scholarpress-catalog.git ../scholarpress-catalog
+```
 
 ---
 
@@ -195,7 +205,10 @@ No phase leaves any repo in a broken state.
 - Delete empty dirs: `tests/checkers/`, `tests/extractors/`, `tests/rust_tests/`
 - Rewrite `tests/integration_test.rs` as corpus sweep (no per-PDF PASS/FAIL assertions)
 - Rewrite `tests/synthetic_margin_test.rs` with updated fixture paths
-- Remove `diss-check/src/main.rs` (CLI entry point extracted in Phase 5, stubbed with a placeholder or kept as `lib.rs` only for this phase)
+- Remove `diss-check/src/main.rs` (CLI entry point extracted in Phase 5). Also
+  remove any `[[bin]]` target from `Cargo.toml` and ensure the crate builds
+  strictly as a `[lib]`. Without this, Cargo will error on the missing `main`
+  function before Phase 5 arrives.
 - Verify: `cargo test` passes
 
 ### Phase 3: Rename diss-check → scholarpress-check
